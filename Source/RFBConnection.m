@@ -80,6 +80,7 @@
         currentReader = nil;
 
         server_ = [(id)server retain];
+        userName = [[server userName] retain];
         password = [[server password] retain];
         
         _eventFilter = [[EventFilter alloc] init];
@@ -175,6 +176,12 @@
 - (void)setSession:(Session *)aSession
 {
     session = aSession;
+}
+
+- (void)setUserName:(NSString *)aUserName
+{
+    [userName release];
+    userName = [aUserName retain];
 }
 
 - (void)setPassword:(NSString *)aPassword
@@ -298,6 +305,11 @@
 
     [handshaker release];
     handshaker = nil;
+}
+
+- (NSString*)userName
+{
+    return userName;
 }
 
 - (NSString*)password

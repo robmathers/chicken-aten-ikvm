@@ -29,6 +29,7 @@ typedef enum
 	EDIT_ADDRESS,
 	EDIT_PORT,
 	EDIT_NAME,
+    EDIT_USERNAME,
 	EDIT_PASSWORD,
 	CONNECT,
 } SUPPORT_TYPE;
@@ -41,6 +42,7 @@ typedef enum
 
 - (NSString*)name;
 - (NSString*)host;
+- (NSString*)userName;
 - (NSString*)password;
 - (bool)rememberPassword;
 - (int)port;

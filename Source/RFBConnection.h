@@ -59,6 +59,7 @@
     ByteReader      *currentReader;
     RFBHandshaker	*handshaker;
     id<IServerData> server_;
+    NSString        *userName;
     NSString        *password;
     RFBProtocol     *rfbProtocol;
     CARD16  lastMouseX; // location of last mouse position we sent
@@ -95,6 +96,7 @@
 
 - (void)setRfbView:(RFBView *)view;
 - (void)setSession:(Session *)aSession;
+- (void)setUserName:(NSString *)userName;
 - (void)setPassword:(NSString *)password;
 - (void)setSshTunnel:(SshTunnel *)tunnel;
 - (void)setReader:(ByteReader*)aReader;
@@ -133,6 +135,7 @@
 - (Profile*)profile;
 - (int) protocolMajorVersion;
 - (int) protocolMinorVersion;
+- (NSString*)userName;
 - (NSString*)password;
 - (BOOL)connectShared;
 - (BOOL)viewOnly;

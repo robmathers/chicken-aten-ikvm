@@ -29,6 +29,7 @@
 // This represents all the data and settings needed to connect to a VNC server.
 @interface ServerBase : NSObject <IServerData> {
 	NSString* _host;
+    NSString* _userName;
 	NSString* _password;
 	int       _port;
 	bool      _shared;
@@ -52,6 +53,7 @@
 
 - (NSString*)name;
 - (NSString*)host;
+- (NSString*)userName;
 - (NSString*)password;
 - (BOOL)rememberPassword;
 - (int)port;
@@ -68,6 +70,7 @@
 
 - (void)setHost: (NSString*)host;
 - (BOOL)setHostAndPort: (NSString*)host;
+- (void)setUserName: (NSString*)userName;
 - (void)setPassword: (NSString*)password;
 - (void)setDisplay: (int)display;
 - (void)setShared: (bool)shared;

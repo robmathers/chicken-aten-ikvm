@@ -35,6 +35,7 @@
     IBOutlet NSTextField *display;
     IBOutlet NSTextField *displayDescription;
     IBOutlet NSTextField *hostName;
+    IBOutlet NSTextField *userName;
     IBOutlet NSTextField *password;
     IBOutlet NSPopUpButton *profilePopup;
     IBOutlet NSButton *rememberPwd;
@@ -66,6 +67,7 @@
 - (void)setServer:(id<IServerData>)server;
 - (id<IServerData>)server;
 
+- (IBAction)userNameChanged:(id)sender;
 - (IBAction)passwordChanged:(id)sender;
 - (IBAction)rememberPwdChanged:(id)sender;
 - (IBAction)profileSelectionChanged:(id)sender;

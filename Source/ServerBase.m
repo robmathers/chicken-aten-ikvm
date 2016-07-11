@@ -40,6 +40,7 @@
 	if( self = [super init] )
 	{
         _host = @"localhost";
+        _userName = nil;
         _password = nil;
         _port = 5900;
         _shared = NO;
@@ -79,6 +80,11 @@
 - (NSString*)host
 {
 	return _host;
+}
+
+- (NSString*)userName
+{
+    return _userName;
 }
 
 - (NSString*)password
@@ -202,6 +208,12 @@
         }
     } else
         return NO;
+}
+
+- (void)setUserName:(NSString *)userName
+{
+    [_userName autorelease];
+    _userName = [userName retain];
 }
 
 - (void)setPassword: (NSString*)password

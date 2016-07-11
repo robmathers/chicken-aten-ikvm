@@ -155,9 +155,18 @@
 }
 
 - (void)atenDiscardDone {
+    const char *userName = [connection.userName UTF8String];
+    if (userName == NULL) {
+        userName = "";
+    }
+    const char *password = [connection.password UTF8String];
+    if (password == NULL) {
+        password = "";
+    }
+    
     unsigned char auth[48] = {0}; // *SPIT*
-    strlcpy((char*) &auth[0], "testuser", 24);
-    strlcpy((char*) &auth[24], "testpass", 24);
+    strlcpy((char*) &auth[0], userName, 24);
+    strlcpy((char*) &auth[24], password, 24);
     [connection writeBytes:&auth[0] length:sizeof(auth)];
     [connection setReader:authResultReader];
 }

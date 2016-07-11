@@ -42,23 +42,23 @@
 	if (self = [super init])
 	{
 		[NSBundle loadNibNamed:@"ServerDisplay.nib" owner:self];
-		
+
 		selfTerminate = NO;
 		removedSaveCheckbox = NO;
-		
+
 		[connectIndicatorText setStringValue:@""];
 		[box setBorderType:NSNoBorder];
 
         connectionWaiter = nil;
-		
+
 		[self loadProfileIntoView];
-		
+
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(updateProfileView:)
 													 name:ProfileListChangeMsg
 												   object:(id)[ProfileDataManager sharedInstance]];
 	}
-	
+
 	return self;
 }
 
@@ -68,7 +68,7 @@
 	{
 		[self setServer:server];
 	}
-	
+
 	return self;
 }
 
@@ -77,13 +77,13 @@
 	if (self = [self init])
 	{
 		selfTerminate = YES;
-		
+
 		[[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(windowClose:)
                                                      name:NSWindowWillCloseNotification
                                                    object:(id)[self window]];
 	}
-	
+
 	return self;
 }
 
@@ -94,11 +94,11 @@
 	{
 		[save release];
 	}
-	
+
     [connectionWaiter cancel];
     [connectionWaiter release];
 	[super dealloc];
-		
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -111,18 +111,18 @@
 													  object:(id)mServer];
 		[(id)mServer autorelease];
 	}
-	
+
 	mServer = [(id)server retain];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(updateView:)
 												 name:ServerChangeMsg
 											   object:(id)mServer];
-	
+
 	[self updateView:nil];
 }
-	
+
 - (void)updateView:(id)notification
-{	
+{
 	// Set properties in dialog box
     if (mServer != nil)
 	{
@@ -133,12 +133,13 @@
 		{
             [self setSaveCheckboxIsVisible: NO];
 		}
-		
+
 		[hostName setEnabled: YES];
+        [userName setEnabled: YES];
 		[password setEnabled: YES];
 		[shared setEnabled: YES];
 		[profilePopup setEnabled: YES];
-		
+
         if (port < DISPLAY_MAX) {
             // Low port numbers have to be encoded as host:port so they won't be
             // interpreted as display numbers
@@ -173,6 +174,7 @@
             /* It's important to do password before rememberPwd so that
              * the latter will reflect a failure to retrieve the
              * passsword from the key chain. */
+        [userName setStringValue:[mServer userName] ? [mServer userName] : @""];
         [password setStringValue:[mServer password] ? [mServer password] : @""];
         [rememberPwd setIntValue:[mServer rememberPassword]];
         [shared setIntValue:[mServer shared]];
@@ -186,8 +188,9 @@
             [useSshTunnel setIntValue:YES];
             [sshHost setStringValue:[mServer sshString]];
         }
-		
+
 		[hostName    setEnabled: [mServer doYouSupport:EDIT_ADDRESS]];
+        [userName    setEnabled: [mServer doYouSupport:EDIT_USERNAME]];
 		[password    setEnabled: [mServer doYouSupport:EDIT_PASSWORD]];
 		[rememberPwd setEnabled: [mServer respondsToSelector:@selector(setRememberPassword:)]];
         [useSshTunnel setEnabled: YES];
@@ -200,6 +203,7 @@
 	else
 	{
 		[hostName setEnabled: NO];
+        [userName setEnabled: NO];
 		[password setEnabled: NO];
 		[rememberPwd setEnabled: NO];
 		[display setEnabled: NO];
@@ -210,6 +214,7 @@
         [sshHost setEnabled: NO];
 
 		[hostName setStringValue:@""];
+        [userName setStringValue:@""];
 		[password setStringValue:@""];
 		[rememberPwd setIntValue:0];
 		[display setStringValue:@""];
@@ -243,13 +248,13 @@
 - (void)loadProfileIntoView
 {
 	[profilePopup removeAllItems];
-	
+
 	NSArray* profileKeys = [NSArray arrayWithArray:[[ProfileDataManager sharedInstance] sortedKeyArray]];
-	
+
 	[profilePopup addItemsWithTitles:profileKeys];
     [[profilePopup menu] addItem: [NSMenuItem separatorItem]];
     [profilePopup addItemWithTitle:NSLocalizedString(@"EditProfiles", nil)];
-	
+
 	[self setProfilePopupToProfile: [mServer profile]];
 }
 
@@ -286,7 +291,7 @@
 {
     int         port = [mServer port];
     NSString    *str;
-    
+
     if (port >= PORT_BASE && port < PORT_BASE + DISPLAY_MAX) {
         NSString    *fmt = NSLocalizedString(@"PortIsDisplay", nil);
 
@@ -321,7 +326,7 @@
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
 	NSControl* sender = [aNotification object];
-	
+
 	if( display == sender )
 	{
 		if( nil != mServer && [mServer doYouSupport:EDIT_PORT] )
@@ -352,6 +357,19 @@
             }
 		}
 	}
+}
+
+- (IBAction)userNameChanged:(id)sender {
+    if ([mServer doYouSupport:EDIT_USERNAME]) {
+        NSString    *str = [sender stringValue];
+
+        if ([str length] > 0)
+            [mServer setUserName:str];
+        else {
+            [mServer setUserName:nil];
+        }
+    }
+
 }
 
 - (IBAction)passwordChanged:(id)sender
@@ -483,7 +501,7 @@
         server = s;
     } else
         server = mServer;
-	
+
     // Asynchronously creates a connection to the server
     connectionWaiter = [[ConnectionWaiter waiterForServer:server
                                                  delegate:self
@@ -545,6 +563,7 @@
 {
     [display setEnabled: NO];
     [hostName setEnabled: NO];
+    [userName setEnabled: NO];
     [password setEnabled: NO];
     [profilePopup setEnabled: NO];
     [rememberPwd setEnabled: NO];
@@ -557,7 +576,7 @@
 }
 
 - (void)windowClose:(id)notification
-{	
+{
 	if([notification object] == [self window])
 	{
 		if( YES == selfTerminate )
