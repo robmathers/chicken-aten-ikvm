@@ -271,7 +271,7 @@ DQ
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" id="KHX-4q-qlk" userLabel="Username">
-                                    <rect key="frame" x="105" y="275" width="219" height="22"/>
+                                    <rect key="frame" x="105" y="275" width="218" height="22"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="IPMI Only" drawsBackground="YES" id="D6x-p8-2EI">
                                         <font key="font" metaFont="system"/>
